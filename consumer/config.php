@@ -49,6 +49,7 @@ $setting = array(
 		'adaptor' => 'File',
 		'path' => 'data/log/',
 		'filenames' => array(
+			'annal' => 'consumer_annal.log',
 			'debug' => 'consumer_debug.log',
 			'error' => 'consumer_error.log',
 		),

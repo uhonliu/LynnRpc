@@ -24,7 +24,18 @@ abstract class Dao implements InjectionAwareInterface {
 		return $this->di;
 	}
 
-	protected function recordMissInfo($func, $args) {
+	protected function recordMissInfo($class, $func, $args) {
+
+		$ReflectionFunc = new \ReflectionMethod($class, $func);
+
+		$paramsKey = array_map(function ($item) {
+			return $item->name;
+		}, $ReflectionFunc->getParameters());
+
+		$paramsArray = array_combine($paramsKey, $args);
+		$annalInfo = array_merge(array('class' => $class, 'func' => $func), $paramsArray);
+
+		$this->di['annalLogger']->log(json_encode($annalInfo));
 
 	}
 }

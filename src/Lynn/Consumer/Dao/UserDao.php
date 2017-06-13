@@ -23,7 +23,7 @@ class UserDao extends Dao {
 		$user->create_time = date('Y-m-d H:i:s');
 		$user->update_time = date('Y-m-d H:i:s');
 		if (!$user->save()) {
-			$this->recordMissInfo(__FUNCTION__, func_get_args());
+			$this->recordMissInfo(__CLASS__, __FUNCTION__, func_get_args());
 		}
 		return $user;
 	}
