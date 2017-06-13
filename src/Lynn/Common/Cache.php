@@ -25,20 +25,36 @@ abstract class Cache implements InjectionAwareInterface {
 		return $this->di;
 	}
 
-	public function incr($key) {
+	/**
+	 *  Cache Common
+	 */
+
+	public function lenth($key) {
 		$redis = $this->di->get($this->_db);
-		$redis->incr($key);
+		return $redis->llen($key);
 	}
 
-	public function decr($key) {
+	public function delete($key) {
 		$redis = $this->di->get($this->_db);
-		$redis->decr($key);
+		$redis->delete($key);
 	}
+
+	/**
+	 *  Cache String
+	 */
 
 	public function get($key) {
 		$redis = $this->di->get($this->_db);
 		$value = $redis->get($key);
 		return unserialize($value);
+	}
+
+	public function set($key, $value, $lifetime = 60) {
+		if (is_null($value)) {
+			return;
+		}
+		$redis = $this->di->get($this->_db);
+		$redis->set($key, serialize($value), $lifetime);
 	}
 
 	public function getCallback($key, $callback, $lifetime = 60) {
@@ -51,27 +67,19 @@ abstract class Cache implements InjectionAwareInterface {
 		return $value;
 	}
 
-	public function set($key, $value, $lifetime = 60) {
-		if (is_null($value)) {
-			return;
-		}
-		$redis = $this->di->get($this->_db);
-		$redis->set($key, serialize($value), $lifetime);
-	}
-
-	public function delete($key) {
-		$redis = $this->di->get($this->_db);
-		$redis->delete($key);
-	}
-
-	public function lenth($key) {
-		$redis = $this->di->get($this->_db);
-		return $redis->llen($key);
-	}
+	/**
+	 *  Cache List
+	 */
 
 	public function lPushSome($key, ...$value) {
 		$redis = $this->di->get($this->_db);
 		$redis->lpush($key, ...$value);
+	}
+
+	public function lRange($key, $begin, $end) {
+		$redis = $this->di->get($this->_db);
+		$value = $redis->lrange($key, $begin, $end);
+		return $value;
 	}
 
 	public function lPushWithLimit($key, $value, $limit) {
@@ -82,25 +90,13 @@ abstract class Cache implements InjectionAwareInterface {
 		}
 	}
 
-	public function lRange($key, $begin, $end) {
-		$redis = $this->di->get($this->_db);
-		$value = $redis->lrange($key, $begin, $end);
-		return $value;
-	}
+	/**
+	 *  Cache Hash
+	 */
 
 	public function hLen($hashKey) {
 		$redis = $this->di->get($this->_db);
 		return $redis->hLen($hashKey);
-	}
-
-	public function hashMset($hashKey, $value) {
-		$redis = $this->di->get($this->_db);
-		$redis->hMset($hashKey, $value);
-	}
-
-	public function hashAllValues($hashKey) {
-		$redis = $this->di->get($this->_db);
-		return $redis->hgetall($hashKey);
 	}
 
 	public function hashSet($hashKey, $key, $value) {
@@ -113,17 +109,14 @@ abstract class Cache implements InjectionAwareInterface {
 		return $redis->hGet($hashKey, $key);
 	}
 
-	public function hGetCallback($hashKey, $key, $callback) {
+	public function hashMset($hashKey, $value) {
 		$redis = $this->di->get($this->_db);
-		$value = $this->hashGet($hashKey, $key);
-		if (empty($value)) {
-			$value = call_user_func($callback);
-			if (is_null($value)) {
-				return null;
-			}
-			$this->hashSet($hashKey, $key, $value);
-		}
-		return $value;
+		$redis->hMset($hashKey, $value);
+	}
+
+	public function hashAllValues($hashKey) {
+		$redis = $this->di->get($this->_db);
+		return $redis->hgetall($hashKey);
 	}
 
 	public function hGetAllCallback($hashKey, $callback) {
@@ -137,16 +130,5 @@ abstract class Cache implements InjectionAwareInterface {
 			$this->hashMset($hashKey, $value);
 		}
 		return $value;
-	}
-
-	public function lPushWithLimitAndDelete($key, $value, $limit) {
-		$redis = $this->di->get($this->_db);
-		$lenth = $redis->lpush($key, $value);
-		if ($lenth > $limit) {
-			$allValues = $this->lRange($key, 0, -1);
-			$oldItem = end($allValues);
-			$redis->rpop($key);
-			$redis->delete($oldItem);
-		}
 	}
 }
