@@ -57,7 +57,7 @@ $di->set('db_w', function () use ($di) {
 	return $connection;
 }, true);
 
-$di->set('modelsMetadata', function () use ($config) {
+$di->set('modelsMetadata', function () {
 	$metaData = new Files([
 		'metaDataDir' => BASE_DIR . '/data/metaData/',
 	]);
