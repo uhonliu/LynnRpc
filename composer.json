@@ -1,0 +1,29 @@
+{
+    "license": "MIT",
+    "minimum-stability": "stable",
+
+    "config": {
+        "secure-http": false
+    },
+    "autoload" : {
+        "psr-4": {
+            "Lynn\\": "src/Lynn/"
+         }
+    },
+    "require": {
+        "hprose/hprose-swoole": "^2.0"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    ],
+    "authors": [
+        {
+            "name": "tenyears102",
+            "role": "developer",
+            "email": "tenyears102@foxmail.com"
+        }
+    ]
+}
