@@ -23,4 +23,8 @@ abstract class Dao implements InjectionAwareInterface {
 	public function getDI() {
 		return $this->di;
 	}
+
+	protected function recordMissInfo($func, $args) {
+
+	}
 }

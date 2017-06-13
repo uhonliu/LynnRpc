@@ -24,14 +24,15 @@ class WriteTask extends Task {
 	protected function dealConsumer($params) {
 		$dealParams = json_decode($params);
 		$type = $dealParams->type;
-		$reflector = new \ReflectionClass('Lynn\Common\Enum\WriteEnum');
+		$func = $dealParams->func;
+		$delFunc = substr($func, 0, strlen($func) - 6);
+		$reflector = new \ReflectionClass('Lynn\Common\Enum\ServiceEnum');
 		$constans = $reflector->getConstants();
-		$writeName = array_search($type, $constans);
-		if (!$writeName) {
-			return null;
+		$enumName = array_search($type, $constans);
+		if (!$enumName) {
+			return;
 		} else {
-			list($serviceName, $functionName) = explode('_', $writeName);
-			call_user_func(array($this->di[$serviceName . 'Service'], $functionName), $dealParams->params);
+			call_user_func(array($this->di[$type . 'Service'], $delFunc), $dealParams->params);
 		}
 	}
 }

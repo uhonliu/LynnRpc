@@ -25,10 +25,10 @@ abstract class Controller implements InjectionAwareInterface {
 		return $this->di;
 	}
 
-	protected function asynchronousWriteLibrary($type, $paramsObj) {
+	protected function asynchronousWriteLibrary($type, $func, $params) {
 		try {
 			$topic = $this->di['lynnTopic'];
-			$params = array("type" => $type, "params" => $paramsObj);
+			$params = array("type" => $type, "func" => $func, "params" => $params);
 			$topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($params, JSON_UNESCAPED_UNICODE));
 			return true;
 		} catch (Exception $e) {

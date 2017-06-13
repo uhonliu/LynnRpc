@@ -9,6 +9,8 @@
 
 namespace Lynn\Common\Enum;
 
-class WriteEnum {
+class ServiceEnum {
+
+	const USER = 'User';
 
 }

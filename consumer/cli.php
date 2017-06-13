@@ -84,7 +84,7 @@ foreach ($tasks as $taskName) {
 	}, true);
 }
 
-$daos = array();
+$daos = array('UserDao');
 foreach ($daos as $daoName) {
 	$dao = 'Lynn\\Consumer\\Dao\\' . $daoName;
 	$di->set($daoName, function () use ($dao) {
@@ -92,7 +92,7 @@ foreach ($daos as $daoName) {
 	}, true);
 }
 
-$services = array('SynchronizeService');
+$services = array('SynchronizeService', 'UserService');
 foreach ($services as $serviceName) {
 	$service = 'Lynn\\Consumer\\Service\\' . $serviceName;
 	$di->set($serviceName, function () use ($service) {

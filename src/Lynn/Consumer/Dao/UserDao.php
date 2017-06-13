@@ -14,4 +14,17 @@ use Lynn\Consumer\Dao;
 
 class UserDao extends Dao {
 
+	public function addUser($uid, $userName, $password, $nickName) {
+		$user = new User();
+		$user->uid = $uid;
+		$user->user_name = $userName;
+		$user->password = $password;
+		$user->nick_name = $nickName;
+		$user->create_time = date('Y-m-d H:i:s');
+		$user->update_time = date('Y-m-d H:i:s');
+		if (!$user->save()) {
+			$this->recordMissInfo(__FUNCTION__, func_get_args());
+		}
+		return $user;
+	}
 }
